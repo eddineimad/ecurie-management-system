@@ -1,0 +1,239 @@
+mysql> create database ecurie;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use ecurie;
+Database changed
+mysql> create table personne(
+    -> id_personne int primary key,
+    -> nom_per varchar(15),
+    -> prenom_per varchar(15),
+    -> telephone varchar(15),
+    -> adresse_per varchar(25),
+    -> fonction varchar(15),
+    -> id_persupe int,
+    -> foreign key (id_persupe) references personne(id_persupe);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 9
+mysql> create table personne(
+    -> id_personne int primary key,
+    -> nom_per varchar(15),
+    -> prenom_per varchar(15),
+    -> telephone varchar(15),
+    -> adresse_per varchar(25),
+    -> fonction varchar(15),
+    -> id_persupe int,
+    -> foreign key (id_persupe) references personne(id_persupe));
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'personne_ibfk_1' in the referenced table 'personne'
+mysql> id_personne int primary key,
+    -> nom_per varchar(15),
+    -> prenom_per varchar(15),
+    -> telephone varchar(15),
+    -> adresse_per varchar(25),
+    -> fonction varchar(15),
+    -> id_persupe int);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id_personne int primary key,
+nom_per varchar(15),
+prenom_per varchar(15),
+teleph' at line 1
+mysql> create table personne(
+    -> id_personne int,
+    -> nom_per varchar(15),
+    -> prenom_per varchar(15),
+    -> telephone varchar(15),
+    -> adresse_per varchar(25),
+    -> fonction varchar(15),
+    -> id_persupe int,
+    -> primary key(id_personne),
+    -> foreign key (id_persupe) references personne(id_persupe));
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'personne_ibfk_1' in the referenced table 'personne'
+mysql> create table personne(
+    -> id_personne int,
+    -> nom_per varchar(15),
+    -> prenom_per varchar(15),
+    -> telephone varchar(15),
+    -> adresse_per varchar(25),
+    -> fonction varchar(15),
+    -> primary key(id_personne));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table personne
+    -> add foreign key (id_persupe) references personne(id_persupe);
+ERROR 1072 (42000): Key column 'id_persupe' doesn't exist in table
+mysql> alter table personne
+    -> add foreign key (id_persupe) references personne(id_personne);
+ERROR 1072 (42000): Key column 'id_persupe' doesn't exist in table
+mysql> alter table personne
+    -> add column id_persupe int;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table personne
+    -> add foreign key (id_persupe) references personne(id_persupe);
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'personne_ibfk_1' in the referenced table 'personne'
+mysql> alter table personne
+    -> add foreign key (id_persupe) references personne(id_personne);
+Query OK, 0 rows affected (0.17 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc personne;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| id_personne | int         | NO   | PRI | NULL    |       |
+| nom_per     | varchar(15) | YES  |     | NULL    |       |
+| prenom_per  | varchar(15) | YES  |     | NULL    |       |
+| telephone   | varchar(15) | YES  |     | NULL    |       |
+| adresse_per | varchar(25) | YES  |     | NULL    |       |
+| fonction    | varchar(15) | YES  |     | NULL    |       |
+| id_persupe  | int         | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> create table chevale(
+    -> id_chevale int primary key,
+    -> nom_chev varchar(15),
+    -> couleur varchar(15),
+    -> numero_tatouage int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table race(
+    -> id_race int primary key,
+    -> poids_type float,
+    -> taille_type float);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table croissance(
+    -> id_croi int primary key,
+    -> mois int,
+    -> poids_croi float,
+    -> taille_croi float,
+    -> id_chevale int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table croissance
+    -> add foreign key (id_chevale) references chevale(id_chevale);
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table chevale
+    -> add column id_race int,
+    -> add column id_personne int,
+    -> add column mere varchar(15),
+    -> add column pere varchar(15);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table chevale
+    -> add foreign key (id_race) references race(id_race),
+    -> add foreign key (id_personne) references personne(id_personne),
+    -> add foreign key (mere) references chevale(id_chevale),
+    -> add foreign key (pere) references chevale(id_chevale);
+ERROR 3780 (HY000): Referencing column 'mere' and referenced column 'id_chevale' in foreign key constraint 'chevale_ibfk_3' are incompatible.
+mysql> alter table chevale
+    -> add foreign key (id_race) references race(id_race),
+    -> add foreign key (id_personne) references personne(id_personne);
+Query OK, 0 rows affected (0.17 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table chevale
+    -> add foreign key (pere) references chevale(id_chevale);
+ERROR 3780 (HY000): Referencing column 'pere' and referenced column 'id_chevale' in foreign key constraint 'chevale_ibfk_3' are incompatible.
+mysql> add foreign key (pere) references chevale(pere);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add foreign key (pere) references chevale(pere)' at line 1
+mysql> desc chevale
+    -> ;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| id_chevale      | int         | NO   | PRI | NULL    |       |
+| nom_chev        | varchar(15) | YES  |     | NULL    |       |
+| couleur         | varchar(15) | YES  |     | NULL    |       |
+| numero_tatouage | int         | YES  |     | NULL    |       |
+| id_race         | int         | YES  | MUL | NULL    |       |
+| id_personne     | int         | YES  | MUL | NULL    |       |
+| mere            | varchar(15) | YES  |     | NULL    |       |
+| pere            | varchar(15) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table chevale
+    -> ;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table concours(
+    -> nom_concours varchar(15),
+    -> lieu varchar(25),
+    -> annee_concours int,
+    -> nombre_Participants int,
+    -> primary key(nom_concours,annee_concours));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table proprietaire(
+    -> id_personne int,
+    -> numero int,
+    -> prix_achat float,
+    -> date_achat date);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table proprietaire
+    -> ;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> drop table proprietaire;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table proprietaire(
+    -> id_personne int,
+    -> id_Chevale int,
+    -> prix_achat float,
+    -> date_achat date,
+    -> primary key(id_personne,id_chevale));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table proprietaire
+    -> add foreign key (id_personne) references personne(id_personne),
+    -> add foreign key (id_chevale) references chevale(id_chevale);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table participant(
+    -> nom_concours varchar(15),
+    -> annee_concours date,
+    -> id_chevale int,
+    -> rank int,
+    -> primary key(nom_concours,annee_concours,id_chevale));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank int,
+primary key(nom_concours,annee_concours,id_chevale))' at line 5
+mysql> create table participant(
+    -> nom_concours varchar(15),
+    -> annee_concours date,
+    -> id_chevale int,
+    -> rank int,
+    -> primary key(nom_concours,annee_concours,id_chevale));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank int,
+primary key(nom_concours,annee_concours,id_chevale))' at line 5
+mysql> create table participant(
+    -> nom_concours varchar(15),
+    -> annee_concours date,
+    -> id_chevale int,
+    -> primary key(nom_concours,annee_concours,id_chevale),
+    -> rank int);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank int)' at line 6
+mysql> create table participant(
+    -> nom_concours varchar(15),
+    -> annee_concours date,
+    -> id_chevale int,
+    -> primary key(nom_concours,annee_concours,id_chevale),
+    -> ranke int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table participant
+    -> add foreign key (nom_concours) references concours(nom_concours),
+    -> add foreign key (annee_concours) references concours(anne_concours),
+    -> add foreign key (id_chevale) references chevale(id_chevale);
+ERROR 3734 (HY000): Failed to add the foreign key constraint. Missing column 'anne_concours' for constraint 'participant_ibfk_2' in the referenced table 'concours'
+mysql> add foreign key (nom_concours) references concours(nom_concours),
+    -> add foreign key (annee_concours) references concours(annee_concours),
+    -> add foreign key (id_chevale) references chevale(id_chevale);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add foreign key (nom_concours) references concours(nom_concours),
+add foreign ke' at line 1
+mysql>
